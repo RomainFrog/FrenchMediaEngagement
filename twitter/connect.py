@@ -5,12 +5,6 @@ import tweepy
 import pickle
 import json
 
-class config:
-	def __init__(self):
-		with open('.env') as json_file:
-			data = json.load(json_file)
-			self.bearer_token = data['BEARER_TOKEN']
-
 config = {}
 with open('.env') as json_file:
 	data = json.load(json_file)
@@ -19,15 +13,13 @@ with open('.env') as json_file:
 #print(config)
 client = tweepy.Client(config['bearer_token'])
 
-#tweepy get 50 tweets from account
-#tweets = client.user_timeline("@realDonaldTrump", count=50)
-
+#tweepy get 5 tweets from account
 result = client.get_users_tweets(24744541, max_results=5, user_auth=False)
 
+data = []
+for tweet in result[0]:
+	data.append(tweet.data)
 
-#save result Pickle
-with open('tweets.pickle', 'wb') as f:
-	pickle.dump(result[0], f)
-
-
-#save result pickle
+#save data json to file
+with open('tweets.json', 'w') as f:
+	json.dump(data, f)
