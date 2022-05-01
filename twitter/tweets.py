@@ -1,9 +1,10 @@
 #!/bin/python
 
 import tweepy
-import pickle
+import json
 
-#Unpickle tweets.pickle
-with open('tweets.pickle', 'rb') as f:
-	tweets = pickle.load(f)
+#Open json data
+with open('tweets.json') as json_file:
+	tweets = json.load(json_file)
 
+print(tweets)
