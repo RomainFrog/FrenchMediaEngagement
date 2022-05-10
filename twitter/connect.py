@@ -13,7 +13,7 @@ with open('.env') as json_file:
 client = tweepy.Client(config['bearer_token'])
 
 #Generating a list of account:
-usernames = ['lemondefr', 'mediavenir']
+usernames = ["lemondefr","franceinfo","France3tv","LeHuffPost","Le_Figaro","le_Parisien","LesEchos","lequipe","libe","LaCroix","humanite_fr","brutofficiel","BFMTV","MediavenirPress","lobs","journalmetro","LaTribune","Valeurs","OuestFrance","CNEWS","20Minutes","canardenchaine","HugoDecrypte","Europe1","Qofficiel","LCI","FRANCE24"]
 user_data = client.get_users(usernames = usernames, user_fields=['id', 'description', 'public_metrics', 'verified', 'location']).data
 results = {}
 for x in user_data:
