@@ -14,7 +14,7 @@ with open('KEY.env') as json_file:
 client = tweepy.Client(KEYS['BEARER_TOKEN'],KEYS['API_KEY'], KEYS['API_KEY_SECRET'], KEYS['ACCES_TOKEN'], KEYS['ACCES_TOKEN_SECRET'])
 
 #Création de la liste d'id des chaines twitter
-list_chaine = ["lemondefr","franceinfo","France3","LeHuffPost","Le_Figaro","le_Parisien","LesEchos","lequipe","libe","LaCroix","humanite_fr","brutofficiel","BFMTV","MediavenirPress","lobs","journalmetro","LaTribune","Valeurs","OuestFrance","CNEWS","20Minutes","canardenchaine","HugoDecrypte","Europe1","Qofficiel","LCI","FRANCE24"]
+list_chaine = ["lemondefr","franceinfo","France3TV","LeHuffPost","Le_Figaro","le_Parisien","LesEchos","lequipe","libe","LaCroix","humanite_fr","brutofficiel","BFMTV","MediavenirPress","lobs","journalmetro","LaTribune","Valeurs","OuestFrance","CNEWS","20Minutes","canardenchaine","HugoDecrypte","Europe1","Qofficiel","LCI","FRANCE24"]
 
 #Obtention des données des chaines ["description","public_metrics","verified","location"]
 chaines = client.get_users(usernames = list_chaine, user_fields=["description","public_metrics","verified","location"]).data
