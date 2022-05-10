@@ -14,15 +14,15 @@ client = tweepy.Client(config['bearer_token'])
 
 #Generating a list of account:
 usernames = ['lemondefr', 'mediavenir']
-results = {x.username : {'id' : int(x.id), 'description' : x.description, 'public_metrics' : x.public_metrics, 'verified' : x.verified, 'location' : x.location} for x in client.get_users(usernames = usernames, user_fields=['description', 'public_metrics', 'verified', 'location']).data}
+results = {x.id : {'username' : x.username), 'description' : x.description, 'public_metrics' : x.public_metrics, 'verified' : x.verified, 'location' : x.location} for x in client.get_users(usernames = usernames, user_fields=['description', 'public_metrics', 'verified', 'location']).data}
 with open('accounts.json', 'w') as f:
 	json.dump(results, f)
 
 #tweepy get 5 tweets from accounts
 MAX_RESULTS = 5
 tweets = {}
-for user in results.values():
-	tweets[user['id']] = client.get_users_tweets(user['id'], max_results=MAX_RESULTS, media_fields=['type', 'public_metrics'], tweet_fields=['created_at', 'geo', 'public_metrics', 'referenced_tweets'], user_auth=False)[0]
+for user_id, user in results.items():
+	tweets[user_id] = client.get_users_tweets(user['id'], max_results=MAX_RESULTS, media_fields=['type', 'public_metrics'], tweet_fields=['created_at', 'geo', 'public_metrics', 'referenced_tweets'], user_auth=False)[0]
 
 
 data = {}
