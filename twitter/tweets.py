@@ -2,6 +2,11 @@
 
 import tweepy
 import json
+from statistics import mean
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
 
 #Open json data
 with open('tweets.json') as json_file:
@@ -10,6 +15,7 @@ with open('tweets.json') as json_file:
 with open('accounts.json') as json_file:
 	author_data = json.load(json_file)
 
+'''
 #Somme des likes par médias, avec infos sur lui
 result = {}
 for author, tweets in tweets_data.items():
@@ -22,7 +28,7 @@ for author, tweets in tweets_data.items():
 			result[author][3] += t['public_metrics']['quote_count']
 			result[author][4] += 1
 
-mean=[0,0,0,0,0]
+average=[0,0,0,0,0]
 retweet=[]
 reply=[]
 like=[]
@@ -42,31 +48,65 @@ for author, a_data in author_data.items():
 	reply.append(result[author][1]/a_data['public_metrics']['followers_count']/result[author][4])
 	like.append(result[author][2]/a_data['public_metrics']['followers_count']/result[author][4])
 	quote.append(result[author][3]/a_data['public_metrics']['followers_count']/result[author][4])
-	mean[0] += result[author][0]/a_data['public_metrics']['followers_count']/result[author][4]
-	mean[1] += result[author][1]/a_data['public_metrics']['followers_count']/result[author][4]
-	mean[2] += result[author][2]/a_data['public_metrics']['followers_count']/result[author][4]
-	mean[3] += result[author][3]/a_data['public_metrics']['followers_count']/result[author][4]
-	mean[4] += 1
+	average[0] += result[author][0]/a_data['public_metrics']['followers_count']/result[author][4]
+	average[1] += result[author][1]/a_data['public_metrics']['followers_count']/result[author][4]
+	average[2] += result[author][2]/a_data['public_metrics']['followers_count']/result[author][4]
+	average[3] += result[author][3]/a_data['public_metrics']['followers_count']/result[author][4]
+	average[4] += 1
 	print(f"Retweet/Followers : {result[author][0]/a_data['public_metrics']['followers_count']/result[author][4]*100000}")
 	print(f"Reply/Followers : {result[author][1]/a_data['public_metrics']['followers_count']/result[author][4]*100000}")
 	print(f"Like/Followers : {result[author][2]/a_data['public_metrics']['followers_count']/result[author][4]*10000}")
 	print(f"Quote/Followers : {result[author][3]/a_data['public_metrics']['followers_count']/result[author][4]*10000000}")
 	print()
 
-print(mean)
-print(f"Mean Retweet/Followers : {mean[0]/mean[4]}")
-print(f"Mean Reply/Followers : {mean[1]/mean[4]}")
-print(f"Mean Like/Followers : {mean[2]/mean[4]}")
-print(f"Mean Quote/Followers : {mean[3]/mean[4]}")
+print(average)
+print(f"average Retweet/Followers : {average[0]/average[4]}")
+print(f"average Reply/Followers : {average[1]/average[4]}")
+print(f"average Like/Followers : {average[2]/average[4]}")
+print(f"average Quote/Followers : {average[3]/average[4]}")
 
-x=int(mean[4]/2)
+x=int(average[4]/2)
 retweet.sort()
 print(f"Mediane Retweet {retweet[x]}")
+print(f"Max Retweet {retweet[average[4]-1]}")
 reply.sort()
 print(f"Mediane Reply {reply[x]}")
+print(f"Max Reply {reply[average[4]-1]}")
 like.sort()
 print(f"Mediane Like {like[x]}")
+print(f"Max Like {like[average[4]-1]}")
 quote.sort()
-print(f"Mediane Retweet {quote[x]}")
+print(f"Mediane Quote {quote[x]}")
+print(f"Max Quote {quote[average[4]-1]}")
+
 #Intégrer la manière de mesurer l'negagement:
 #Normaliser l'engag
+
+#( Retweet+ likes\number of tweets)\ Total number of followers))* 100= engagement rate 
+'''
+#engagement
+engagement={}
+for author, tweets in tweets_data.items():
+	engagement[author] = []
+	for t in tweets:
+		engagement[author].append( (t['public_metrics']['retweet_count']+t['public_metrics']['like_count']+t['public_metrics']['reply_count']+t['public_metrics']['quote_count']) / author_data[author]['public_metrics']['followers_count'] * 100 )
+	
+result={}
+authors=[]
+eng=[]
+for author, r in engagement.items():
+	print(author_data[author]['username'])
+	authors.append(author_data[author]['username'])
+
+	print(mean(engagement[author]))
+	result[author_data[author]['username']] = mean(engagement[author])
+	eng.append(mean(engagement[author]))
+
+print(result)
+df = pd.DataFrame({'media': authors, 'engagement': eng})
+print(df)
+
+sns.barplot(y='media', x="engagement", data=df)
+plt.title("Engagement par media")
+plt.show()
+#print(engagement)
